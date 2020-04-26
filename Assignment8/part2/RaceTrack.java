@@ -11,6 +11,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 
 public class RaceTrack extends Application {
@@ -42,6 +44,12 @@ public class RaceTrack extends Application {
 		startbt.setText("Start");
 		pausebt.setText("Pause");
 		resetbt.setText("Reset");
+
+		startbt.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+				startRace();
+		    }
+		});
 
 		HBox btbox = new HBox();
 		btbox.getChildren().addAll(startbt, pausebt, resetbt);
@@ -77,7 +85,6 @@ public class RaceTrack extends Application {
 
 		}
 
-
 		BorderPane pane = new BorderPane();
 		pane.setTop(btbox);
 		pane.setCenter(raceContainer);
@@ -109,7 +116,6 @@ public class RaceTrack extends Application {
 		this.numCars = 3;
 		initStage(stage);
 		stage.show();	
-		startRace();
 	}
 
 
