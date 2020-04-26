@@ -7,12 +7,14 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType; 
+
 
 
 public class RaceTrack extends Application {
@@ -20,7 +22,7 @@ public class RaceTrack extends Application {
 	int numCars;
 	int carLength = 32;
 	int trackLength = 400;
-	int finishLine = trackLength-carLength;
+	int finishLine = trackLength - (carLength);
 
 	boolean winner = false;
 	boolean paused = false;
@@ -32,6 +34,8 @@ public class RaceTrack extends Application {
 	ImageView[] carViews;
 	
 	public void initStage(Stage stage){
+		stage.setTitle("Richmond Raceway"); 
+
 		stage.setX(500);
 		stage.setY(500);
 
@@ -114,10 +118,11 @@ public class RaceTrack extends Application {
 				return;
 			}
 
-			carViews[carIndex].setTranslateX(position);
-
-			if(position >= finishLine) {
+			if(position >= finishLine){
+				carViews[carIndex].setTranslateX(finishLine);
 				alertWinner(carIndex);
+			} else {
+				carViews[carIndex].setTranslateX(position);
 			}
 
 		});
@@ -125,10 +130,12 @@ public class RaceTrack extends Application {
 	}
 
 	public void alertWinner(int carIndex){
-		/* TO DO: alert winner */
-		/***********************/
 
+		Alert alert = new Alert(AlertType.INFORMATION);
+
+		alert.setContentText("Car " + (carIndex+1) + " Wins!" ); 
 		winner = true;
+		alert.show();
 	}
 
 	public void startRace(){
