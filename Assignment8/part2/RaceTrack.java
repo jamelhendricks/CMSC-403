@@ -18,6 +18,11 @@ import javafx.event.EventHandler;
 public class RaceTrack extends Application {
 
 	int numCars;
+	int carLength = 32;
+	int trackLength = 400;
+	int finishLine = trackLength-carLength;
+	boolean winner = false;
+
 	Stage stage;
 	ImageView[] carViews;
 
@@ -70,11 +75,11 @@ public class RaceTrack extends Application {
 			HBox carTrack = new HBox();
 			
 			// set car starting spot
-			carFrame.setTranslateX(-32);
+			carFrame.setTranslateX((-1) * carLength);
 
 			carTrack.setTranslateX(50);
-			carTrack.setMaxWidth(400);
-			carTrack.setMaxHeight(16);
+			carTrack.setMaxWidth(trackLength);
+			//carTrack.setMaxHeight(16);
 			carTrack.setStyle("-fx-background-color: #CCCCCC"); 
 			carTrack.getChildren().add(carFrame);
 
@@ -93,12 +98,23 @@ public class RaceTrack extends Application {
 		stage.setScene(scene);
 	}
 
-	public void moveCar(int carIndex, int distance){
+	public void moveCar(int carIndex, int position){
+
 		Thread t = new Thread( () -> {
-			carViews[carIndex].setTranslateX(distance);
+
+			if(winner){
+				return;
+			} 
+
+			carViews[carIndex].setTranslateX(position);
+			if(position >= finishLine) {
+				winner = true;
+				System.out.println("Winner: Car #" + (carIndex + 1));
+			}
 
 		});
 		Platform.runLater(t);
+		
 	}
 
 	public void startRace(){

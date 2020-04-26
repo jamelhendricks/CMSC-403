@@ -19,11 +19,11 @@ public class CarThread extends Thread {
 		int min = 0;
 
 		try{
-			while(true){
+			while(!gui.winner){
 				int distance = (int) (Math.random() * ((max - min) +1) + min );
 				position += distance;
 				gui.moveCar(carIndex, position);
-				sleep(50);
+				sleep(0);
 			}
 		} catch (InterruptedException e){
 			System.out.println("Stopped Car #" + carIndex + "!");
