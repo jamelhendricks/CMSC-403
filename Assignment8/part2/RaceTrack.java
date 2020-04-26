@@ -21,18 +21,13 @@ public class RaceTrack extends Application {
 	int carLength = 32;
 	int trackLength = 400;
 	int finishLine = trackLength-carLength;
+
 	boolean winner = false;
+	boolean paused = false;
+	boolean started = false;
 
 	Stage stage;
 	ImageView[] carViews;
-
-
-	/*
-
-		
-
-	*/
-
 	
 	public void initStage(Stage stage){
 		stage.setX(500);
@@ -53,6 +48,12 @@ public class RaceTrack extends Application {
 		startbt.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
 				startRace();
+		    }
+		});
+
+		pausebt.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+				pauseRace();
 		    }
 		});
 
@@ -104,7 +105,7 @@ public class RaceTrack extends Application {
 
 			if(winner){
 				return;
-			} 
+			}
 
 			carViews[carIndex].setTranslateX(position);
 			if(position >= finishLine) {
@@ -119,18 +120,28 @@ public class RaceTrack extends Application {
 	public void alertWinner(int carIndex){
 		/* TO DO: alert winner */
 		/***********************/
-		
+
 		winner = true;
 		System.out.println("Winner: Car #" + (carIndex + 1));
 	}
 
 	public void startRace(){
 
+		if(started){
+			paused = false;
+			return;
+		} 
+
+		started = true;
+
 		for (int i = 0; i < numCars; i++){
 			CarThread t = new CarThread(this, i);
 			t.start();
 		}
+	}
 
+	public void pauseRace(){
+		paused = true;
 	}
 
 

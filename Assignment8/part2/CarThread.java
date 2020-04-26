@@ -20,9 +20,13 @@ public class CarThread extends Thread {
 
 		try{
 			while(!gui.winner){
-				int distance = (int) (Math.random() * ((max - min) +1) + min );
-				position += distance;
-				gui.moveCar(carIndex, position);
+
+				if (!gui.paused){
+					int distance = (int) (Math.random() * ((max - min) +1) + min );
+					position += distance;
+					gui.moveCar(carIndex, position);
+				}
+				
 				sleep(50);
 			}
 		} catch (InterruptedException e){
