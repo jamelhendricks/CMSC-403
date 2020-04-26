@@ -26,12 +26,13 @@ public class CarThread extends Thread {
 					position += distance;
 					gui.moveCar(carIndex, position);
 				}
-				
+
 				sleep(50);
 			}
-		} catch (InterruptedException e){
-			System.out.println("Stopped Car #" + carIndex + "!");
-		}
+
+			this.interrupt();
+
+		} catch (InterruptedException e){}
 
 	}
 

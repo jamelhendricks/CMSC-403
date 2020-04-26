@@ -26,6 +26,8 @@ public class RaceTrack extends Application {
 	boolean paused = false;
 	boolean started = false;
 
+	CarThread[] carThreads;
+
 	Stage stage;
 	ImageView[] carViews;
 	
@@ -57,6 +59,12 @@ public class RaceTrack extends Application {
 		    }
 		});
 
+		resetbt.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+				resetRace();
+		    }
+		});
+
 		HBox btbox = new HBox();
 		btbox.getChildren().addAll(startbt, pausebt, resetbt);
 		btbox.setPadding(new Insets(12.5, 0, 12.5, 0));
@@ -69,6 +77,7 @@ public class RaceTrack extends Application {
 
 		carViews = new ImageView[numCars];
 		HBox[] tracks = new HBox[numCars];
+		carThreads = new CarThread[numCars];
 
 
 		for (int i = 0; i < numCars; i++){
@@ -80,7 +89,6 @@ public class RaceTrack extends Application {
 
 			carTrack.setTranslateX(50);
 			carTrack.setMaxWidth(trackLength);
-			//carTrack.setMaxHeight(16);
 			carTrack.setStyle("-fx-background-color: #CCCCCC"); 
 			carTrack.getChildren().add(carFrame);
 
@@ -88,7 +96,6 @@ public class RaceTrack extends Application {
 
 			carViews[i] = carFrame;
 			tracks[i] = carTrack;
-
 		}
 
 		BorderPane pane = new BorderPane();
@@ -108,13 +115,13 @@ public class RaceTrack extends Application {
 			}
 
 			carViews[carIndex].setTranslateX(position);
+
 			if(position >= finishLine) {
 				alertWinner(carIndex);
 			}
 
 		});
 		Platform.runLater(t);
-		
 	}
 
 	public void alertWinner(int carIndex){
@@ -122,7 +129,6 @@ public class RaceTrack extends Application {
 		/***********************/
 
 		winner = true;
-		System.out.println("Winner: Car #" + (carIndex + 1));
 	}
 
 	public void startRace(){
@@ -136,6 +142,7 @@ public class RaceTrack extends Application {
 
 		for (int i = 0; i < numCars; i++){
 			CarThread t = new CarThread(this, i);
+			carThreads[i] = t;
 			t.start();
 		}
 	}
@@ -144,14 +151,29 @@ public class RaceTrack extends Application {
 		paused = true;
 	}
 
+	public void resetRace(){
+		for (CarThread t : carThreads){
+			t.interrupt();
+		}
+
+		resetCars();	
+
+		winner = false;
+		paused = false;
+		started = false;
+	}
+
+	public void resetCars(){
+		for (int i = 0; i < numCars; i++){
+			carViews[i].setTranslateX(0);		
+		}	
+	}
 
 	public void start(Stage stage) {
-
 		this.numCars = 3;
 		initStage(stage);
 		stage.show();	
 	}
-
 
 	public static void main(String[] args){
 		launch(args);
