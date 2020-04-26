@@ -108,13 +108,20 @@ public class RaceTrack extends Application {
 
 			carViews[carIndex].setTranslateX(position);
 			if(position >= finishLine) {
-				winner = true;
-				System.out.println("Winner: Car #" + (carIndex + 1));
+				alertWinner(carIndex);
 			}
 
 		});
 		Platform.runLater(t);
 		
+	}
+
+	public void alertWinner(int carIndex){
+		/* TO DO: alert winner */
+		/***********************/
+		
+		winner = true;
+		System.out.println("Winner: Car #" + (carIndex + 1));
 	}
 
 	public void startRace(){
