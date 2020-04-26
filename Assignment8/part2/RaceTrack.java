@@ -94,12 +94,22 @@ public class RaceTrack extends Application {
 		Platform.runLater(t);
 	}
 
+	public void startRace(){
+
+		for (int i = 0; i < numCars; i++){
+			CarThread t = new CarThread(this, i);
+			t.start();
+		}
+
+	}
+
 
 	public void start(Stage stage) {
 
 		this.numCars = 3;
 		initStage(stage);
 		stage.show();	
+		startRace();
 	}
 
 
