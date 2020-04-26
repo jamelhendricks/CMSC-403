@@ -10,11 +10,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.application.Platform;
+
 
 public class RaceTrack extends Application {
 
 	int numCars;
 	Stage stage;
+	ImageView[] carViews;
+
 
 	/*
 
@@ -49,7 +53,7 @@ public class RaceTrack extends Application {
 		raceContainer.setSpacing(10);
 		Image carImg = new Image("sportive-car.png");
 
-		ImageView[] carViews = new ImageView[numCars];
+		carViews = new ImageView[numCars];
 		HBox[] tracks = new HBox[numCars];
 
 
@@ -82,24 +86,20 @@ public class RaceTrack extends Application {
 		stage.setScene(scene);
 	}
 
+	public void moveCar(int carIndex, int distance){
+		Thread t = new Thread( () -> {
+			carViews[carIndex].setTranslateX(distance);
+
+		});
+		Platform.runLater(t);
+	}
+
 
 	public void start(Stage stage) {
-		/*
-		stage.setX(500);
-		stage.setY(500);
 
-		stage.setMinHeight(200);
-		stage.setMinWidth(500);
-		stage.setResizable(false);
-		
-		BorderPane pane = new BorderPane();		
-		Scene scene = new Scene(pane);
-		stage.setScene(scene);
-		*/
 		this.numCars = 3;
 		initStage(stage);
 		stage.show();	
-
 	}
 
 
