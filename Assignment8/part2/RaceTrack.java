@@ -27,6 +27,7 @@ public class RaceTrack extends Application {
 	boolean winner = false;
 	boolean paused = false;
 	boolean started = false;
+	boolean reset = false;
 
 	CarThread[] carThreads;
 
@@ -114,7 +115,7 @@ public class RaceTrack extends Application {
 
 		Thread t = new Thread( () -> {
 
-			if(winner){
+			if(winner || reset){
 				return;
 			}
 
@@ -139,19 +140,22 @@ public class RaceTrack extends Application {
 	}
 
 	public void startRace(){
+		Thread th = new Thread( () -> {
+			if(started){
+				paused = false;
+				return;
+			} 
 
-		if(started){
-			paused = false;
-			return;
-		} 
+			started = true;
+			reset = false;
 
-		started = true;
-
-		for (int i = 0; i < numCars; i++){
-			CarThread t = new CarThread(this, i);
-			carThreads[i] = t;
-			t.start();
-		}
+			for (int i = 0; i < numCars; i++){
+				CarThread t = new CarThread(this, i);
+				carThreads[i] = t;
+				t.start();
+			}
+		});
+		Platform.runLater(th);
 	}
 
 	public void pauseRace(){
@@ -159,21 +163,27 @@ public class RaceTrack extends Application {
 	}
 
 	public void resetRace(){
-		for (CarThread t : carThreads){
-			t.interrupt();
-		}
+		Thread th = new Thread( () -> {
 
-		resetCars();	
+			reset = true;
 
-		winner = false;
-		paused = false;
-		started = false;
+			for (CarThread t : carThreads){
+				t.interrupt();
+			}
+			
+			resetCars();	
+
+			winner = false;
+			paused = false;
+			started = false;
+		});
+		Platform.runLater(th);
 	}
 
 	public void resetCars(){
-		for (int i = 0; i < numCars; i++){
-			carViews[i].setTranslateX(0);		
-		}	
+		for(int i = 0; i < numCars; i++){
+			carViews[i].setTranslateX(0);
+		}
 	}
 
 	public void start(Stage stage) {
